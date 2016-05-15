@@ -1,0 +1,33 @@
+{
+  "name": "s2s",
+  "version": "1.0.0",
+  "description": "A Stash / Bitbucket post-hook proxy to Slack",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "ramda": "^0.21.0",
+    "hogan":"^1.0.2",
+    "request": "^2.72.0"
+  },
+  "engines": {
+    "node": "6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jondot/s2s"
+  },
+  "keywords": [
+    "stash",
+    "slack",
+    "bitbucket"
+  ],
+  "author": "Dotan Nahum",
+  "contributors": [
+    "Dotan Nahum <jondotan@gmail.com>"
+  ],
+  "license": "MIT"
+}

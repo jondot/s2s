@@ -1,0 +1,6 @@
+{
+  "name": "Stash / Bitbucket to Slack",
+  "description": "Stash / Bitbucket to Slack",
+  "repository": "https://github.com/jondot/s2s",
+  "keywords": ["slack", "bitbucket", "stash"]
+}
