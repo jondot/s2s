@@ -6,9 +6,9 @@ const R = require('ramda')
 const hogan = require('hogan.js')
 
 const BASE_STASH = process.env.BASE_STASH  || 'https://please-set-stash-env-variable.stash.net'
-const CHANNEL = process.env.CHANNEL || '#bots'
+const channel = process.env.CHANNEL || '#bots'
 const SLACK_HOOK = process.env.SLACK_HOOK || 'http://example.com'
-const BOT_NAME = process.env.BOT_NAME || 'Captain Hook'
+const username = process.env.BOT_NAME || 'Captain Hook'
 const HOOK_KEY = process.env.HOOK_KEY || 's3cr3t'
 const MSG_TMPL = process.env.MSG_TMPL || "{{#people}}@{{name}} just learned about:\n{{#commits}}* <{{url}}|{{message}}>\n {{/commits}}\n{{/people}}"
 const template = hogan.compile(MSG_TMPL);
@@ -16,7 +16,7 @@ const template = hogan.compile(MSG_TMPL);
 const hook = `/${HOOK_KEY}`
 
 //https://github.com/expressjs/body-parser/issues/100
-app.use(function (req, res, next) {
+app.use((req, res, next)=>{
   delete req.headers['content-encoding']
   next()
 })
@@ -32,18 +32,18 @@ const peoplereducer = (acc,value)=>{
   return acc
 }
 
-app.post(hook, function(req,res){
-  const data = R.pipe(R.reduce(peoplereducer, {}), R.values)(req.body.changesets.values)
-  const msg = template.render({people: data})
-  console.log(msg)
+app.post(hook, (req,res)=>{
+  const people = R.pipe(R.reduce(peoplereducer, {}), R.values)(req.body.changesets.values)
+  const text = template.render({people})
+  console.log(text)
 
   request.post(
     {
       headers: {'content-type' : 'application/json'},
       url: SLACK_HOOK,
-      body: JSON.stringify({channel: CHANNEL, text: msg, username: BOT_NAME})
+      body: JSON.stringify({channel, username, text})
     },
-    SLACK_HOOK, function (error, response, body) {
+    SLACK_HOOK, (error, response, body)=>{
     if(error){
       res.status(500).end()
     }else{
@@ -52,8 +52,7 @@ app.post(hook, function(req,res){
   })
 })
 
-app.listen(app.get('port'), function() {
-  console.log('-> Hook is at:', hook)
-  console.log('-> Configuration:', [BOT_NAME, BASE_STASH, CHANNEL, SLACK_HOOK])
-  console.log("-> Running on:", app.get('port'))
+const port = app.get('port')
+app.listen(port, function() {
+  console.log('-> s2s now running:', {hook, port, username, channel, BASE_STASH , SLACK_HOOK})
 })
